@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vexbiz · Solicitud de devolución</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0f1b2d; --muted:#5b6b80; --line:#e3e8ef; --bg:#f4f6fa; --card:#fff;
+  --brand:#1450d2; --brand-soft:#e8efff; --accent:#ff7a1a;
+  --ok:#12805c; --ok-soft:#e3f5ee; --warn:#a15c00; --warn-soft:#fff3e0; --bad:#c0362c; --bad-soft:#fdeceb;
+  --r:14px;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Plus Jakarta Sans",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.5}
+header{background:var(--ink);color:#fff;padding:14px 20px;display:flex;align-items:center;gap:12px}
+.logo{font-weight:800;letter-spacing:.5px;font-size:18px}
+.logo b{color:var(--accent)}
+header span{opacity:.7;font-size:13px}
+.wrap{max-width:760px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:24px;margin:8px 0 4px}
+.sub{color:var(--muted);margin:0 0 18px}
+.steps{display:flex;gap:6px;margin-bottom:18px}
+.steps div{flex:1;height:6px;border-radius:9px;background:var(--line);transition:.3s}
+.steps div.on{background:var(--brand)}
+.steplabel{font-size:13px;color:var(--muted);margin-bottom:6px;font-weight:600}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px;box-shadow:0 1px 2px rgba(15,27,45,.04)}
+.card h2{font-size:18px;margin:0 0 4px}
+.card .hint{color:var(--muted);font-size:13.5px;margin:0 0 16px}
+label.f{display:block;font-weight:600;font-size:13.5px;margin:14px 0 6px}
+label.f small{font-weight:400;color:var(--muted)}
+input[type=text],input[type=email],input[type=tel],input[type=date],select,textarea{
+  width:100%;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;font:inherit;background:#fff;color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+textarea{min-height:90px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:560px){.row{grid-template-columns:1fr}}
+.opt{display:flex;gap:12px;align-items:flex-start;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:.15s;background:#fff}
+.opt:hover{border-color:#b9c7e0}
+.opt input{margin-top:3px;accent-color:var(--brand);width:17px;height:17px;flex:none}
+.opt.sel{border-color:var(--brand);background:var(--brand-soft)}
+.opt.dis{opacity:.55;cursor:not-allowed;background:#fafafa}
+.opt .t{font-weight:600}
+.opt .d{font-size:13px;color:var(--muted)}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:6px;vertical-align:1px}
+.tag.ok{background:var(--ok-soft);color:var(--ok)} .tag.warn{background:var(--warn-soft);color:var(--warn)} .tag.bad{background:var(--bad-soft);color:var(--bad)}
+.qty{width:80px!important;margin-left:auto}
+.group-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:16px 0 8px}
+.note{border-radius:10px;padding:11px 13px;font-size:13.5px;margin:12px 0}
+.note.info{background:var(--brand-soft);color:#173a86}
+.note.warn{background:var(--warn-soft);color:var(--warn)}
+.note.bad{background:var(--bad-soft);color:var(--bad)}
+.note.ok{background:var(--ok-soft);color:var(--ok)}
+.cond{display:none}
+.cond.show{display:block}
+.drop{border:2px dashed #c4cfe0;border-radius:12px;padding:20px;text-align:center;color:var(--muted);cursor:pointer;background:#fbfcfe}
+.drop:hover{border-color:var(--brand);color:var(--brand)}
+.thumbs{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.thumbs div{position:relative}
+.thumbs img{width:84px;height:84px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
+.thumbs button{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;border:none;background:var(--ink);color:#fff;cursor:pointer;font-size:12px}
+.nav{display:flex;justify-content:space-between;margin-top:18px;gap:10px}
+.btn{font:inherit;font-weight:700;border:none;border-radius:11px;padding:12px 20px;cursor:pointer}
+.btn.p{background:var(--brand);color:#fff} .btn.p:hover{background:#0f42b0}
+.btn.s{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
+.btn.a{background:var(--accent);color:#fff}
+.err{color:var(--bad);font-size:13px;margin-top:8px;display:none}
+.err.show{display:block}
+.sum{display:grid;grid-template-columns:150px 1fr;gap:6px 12px;font-size:14px}
+.sum dt{color:var(--muted)} .sum dd{margin:0;font-weight:600}
+.timeline{list-style:none;padding:0;margin:14px 0 0}
+.timeline li{position:relative;padding:0 0 14px 28px;font-size:14px}
+.timeline li:before{content:"";position:absolute;left:6px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--line)}
+.timeline li:after{content:"";position:absolute;left:10px;top:18px;bottom:0;width:2px;background:var(--line)}
+.timeline li:last-child:after{display:none}
+.timeline li.on:before{background:var(--ok)}
+.timeline small{color:var(--muted);display:block}
+.rma{font-size:28px;font-weight:800;letter-spacing:1px;color:var(--brand)}
+pre{background:#0f1b2d;color:#d6e2ff;padding:14px;border-radius:10px;font-size:12px;overflow:auto;max-height:320px}
+details summary{cursor:pointer;font-weight:700;margin-top:16px}
+.prod{display:flex;gap:12px;align-items:center}
+.pimg{width:46px;height:46px;border-radius:9px;background:var(--brand-soft);display:grid;place-items:center;font-size:22px;flex:none}
+.foot{text-align:center;color:var(--muted);font-size:12px;margin-top:22px}
+</style>
+</head>
+<body>
+<header><div class="logo">VEX<b>BIZ</b></div><span>Centro de devoluciones</span></header>
+<div class="wrap">
+  <h1>Solicitar una devolución</h1>
+  <p class="sub">Cuéntanos qué pasó con tu compra. La tienda tiene 48 horas hábiles para responder; si no responde, Vexbiz interviene.</p>
+
+  <div class="steps" id="bar"></div>
+  <div class="steplabel" id="slabel"></div>
+
+  <form id="f" novalidate>
+  <!-- PASO 1 -->
+  <section class="card step" data-title="Tu pedido">
+    <h2>1. Identifica tu pedido</h2>
+    <p class="hint">Lo encuentras en el correo de confirmación o en <b>Mis compras</b>.</p>
+    <div class="row">
+      <div><label class="f">Número de pedido</label><input type="text" id="orden" placeholder="VX-2026-004512"></div>
+      <div><label class="f">Fecha en que lo recibiste</label><input type="date" id="fentrega"></div>
+    </div>
+    <div class="row">
+      <div><label class="f">Nombre y apellido</label><input type="text" id="nombre" placeholder="Ej. María Rodríguez"></div>
+      <div><label class="f">Teléfono (WhatsApp)</label><input type="tel" id="tel" placeholder="0414-1234567"></div>
+    </div>
+    <label class="f">Correo electrónico</label><input type="email" id="email" placeholder="tucorreo@ejemplo.com">
+    <div class="note info" id="plazoNote">Tienes <b>7 días</b> desde la entrega para devoluciones por arrepentimiento y <b>30 días</b> para productos defectuosos, dañados o equivocados.</div>
+    <div class="err" id="e1"></div>
+  </section>
+
+  <!-- PASO 2 -->
+  <section class="card step" data-title="Productos">
+    <h2>2. ¿Qué producto(s) quieres devolver?</h2>
+    <p class="hint">Pedido <b id="ordenLbl"></b> · Tienda: <b>Ferretería Ejemplo, C.A.</b> (datos de muestra)</p>
+    <div id="prods"></div>
+    <div class="err" id="e2"></div>
+  </section>
+
+  <!-- PASO 3 -->
+  <section class="card step" data-title="Motivo">
+    <h2>3. ¿Por qué lo devuelves?</h2>
+    <p class="hint">Elige el motivo que mejor describa el problema. Esto define quién cubre el traslado.</p>
+    <div id="motivos"></div>
+
+    <div class="cond" id="c_defecto">
+      <label class="f">¿Qué falla presenta?</label>
+      <select id="falla"><option value="">Selecciona…</option><option>No enciende / no funciona</option><option>Funciona de forma intermitente</option><option>Se dañó en el primer uso</option><option>Pieza rota o desprendida</option><option>Fuga, filtración o mal sellado</option><option>Otra falla</option></select>
+      <label class="f">¿Cuántas veces lo usaste antes de la falla?</label>
+      <select id="usos"><option value="">Selecciona…</option><option>Nunca lo pude usar</option><option>1 vez</option><option>De 2 a 5 veces</option><option>Más de 5 veces</option></select>
+    </div>
+    <div class="cond" id="c_danado">
+      <label class="f">¿Cómo llegó el empaque?</label>
+      <select id="empaqueLlegada"><option value="">Selecciona…</option><option>Empaque intacto, producto dañado por dentro</option><option>Empaque golpeado o aplastado</option><option>Empaque abierto o roto</option><option>Sin empaque</option></select>
+      <div class="note warn">Necesitaremos fotos del empaque y del producto en el paso 5.</div>
+    </div>
+    <div class="cond" id="c_equivocado">
+      <label class="f">¿Qué recibiste en su lugar? <small>(marca, modelo, medida o color)</small></label>
+      <input type="text" id="recibido" placeholder="Ej. Recibí disco de 7&quot; en vez de 4½&quot;">
+    </div>
+    <div class="cond" id="c_incompleto">
+      <label class="f">¿Qué falta?</label>
+      <input type="text" id="falta" placeholder="Ej. Faltan 2 brocas del juego / llegaron 8 de 10 unidades">
+    </div>
+    <div class="cond" id="c_descripcion">
+      <label class="f">¿En qué no coincide con la publicación?</label>
+      <select id="difiere"><option value="">Selecciona…</option><option>Medida o dimensiones</option><option>Material o calidad</option><option>Color o acabado</option><option>Marca o modelo</option><option>Potencia, voltaje o capacidad</option><option>Otro dato de la ficha</option></select>
+    </div>
+    <div class="cond" id="c_compat">
+      <label class="f">¿La publicación indicaba la medida o compatibilidad correcta?</label>
+      <select id="fichaClara"><option value="">Selecciona…</option><option value="no">No, la ficha no lo decía o estaba mal</option><option value="si">Sí, fue un error mío al elegir</option><option value="nose">No estoy seguro</option></select>
+    </div>
+    <label class="f">Cuéntanos con más detalle <small>(mínimo 20 caracteres)</small></label>
+    <textarea id="detalle" placeholder="Describe lo que pasó con tus palabras…"></textarea>
+    <div class="err" id="e3"></div>
+  </section>
+
+  <!-- PASO 4 -->
+  <section class="card step" data-title="Estado del producto">
+    <h2>4. ¿En qué estado está el producto?</h2>
+    <p class="hint">Así la tienda sabe qué esperar al recibirlo.</p>
+    <div class="group-title">Condición</div>
+    <div id="condicion"></div>
+    <div class="group-title">Empaque y accesorios</div>
+    <label class="opt"><input type="checkbox" id="empOrig"><div><div class="t">Conservo el empaque original</div><div class="d">Caja, blíster o envase de fábrica</div></div></label>
+    <label class="opt"><input type="checkbox" id="accComp"><div><div class="t">Tiene todos sus accesorios, manuales y piezas</div></div></label>
+    <label class="opt"><input type="checkbox" id="factura"><div><div class="t">Tengo la factura o nota de entrega</div></div></label>
+    <div class="note warn" id="usadoNote" style="display:none">Si lo devuelves por arrepentimiento y ya está usado o sin empaque, la tienda puede rechazar la devolución o aplicar un descuento.</div>
+    <div class="err" id="e4"></div>
+  </section>
+
+  <!-- PASO 5 -->
+  <section class="card step" data-title="Fotos">
+    <h2>5. Sube fotos o un video corto</h2>
+    <p class="hint" id="fotoHint">Ayudan a resolver más rápido. Muestra el producto, la falla y la etiqueta o serial.</p>
+    <div class="drop" id="drop">📷 Toca para subir o arrastra aquí<br><small>JPG o PNG · hasta 6 archivos</small></div>
+    <input type="file" id="fotos" accept="image/*" multiple hidden>
+    <div class="thumbs" id="thumbs"></div>
+    <div class="err" id="e5"></div>
+  </section>
+
+  <!-- PASO 6 -->
+  <section class="card step" data-title="Solución">
+    <h2>6. ¿Cómo quieres resolverlo?</h2>
+    <div class="group-title">Lo que prefieres</div>
+    <div id="soluciones"></div>
+    <div class="cond" id="c_reembolso">
+      <div class="note info">El reembolso se hace al mismo medio con el que pagaste (pago móvil vía Spidi) después de que la tienda recibe y revisa el producto.</div>
+      <div class="row">
+        <div><label class="f">Banco para el pago móvil</label><select id="banco"><option value="">Selecciona…</option><option>Banco de Venezuela</option><option>Banesco</option><option>Mercantil</option><option>Provincial</option><option>Sofitasa</option><option>Bancamiga</option><option>BNC</option><option>Otro</option></select></div>
+        <div><label class="f">Cédula del titular</label><input type="text" id="ci" placeholder="V-12345678"></div>
+      </div>
+    </div>
+    <div class="group-title">¿Cómo nos entregas el producto?</div>
+    <div id="entregas"></div>
+    <div class="note" id="costoNote"></div>
+    <div class="err" id="e6"></div>
+  </section>
+
+  <!-- PASO 7 -->
+  <section class="card step" data-title="Confirmar">
+    <h2>7. Revisa y envía</h2>
+    <dl class="sum" id="resumen"></dl>
+    <label class="opt" style="margin-top:16px"><input type="checkbox" id="acepto"><div><div class="t">Acepto la política de devoluciones de Vexbiz</div><div class="d">Declaro que la información es verdadera. La tienda revisará el producto al recibirlo antes de aprobar el reembolso o cambio.</div></div></label>
+    <div class="err" id="e7"></div>
+  </section>
+
+  <div class="nav" id="nav">
+    <button type="button" class="btn s" id="back">← Atrás</button>
+    <button type="button" class="btn p" id="next">Continuar →</button>
+  </div>
+  </form>
+
+  <!-- RESULTADO -->
+  <section class="card" id="done" style="display:none">
+    <div class="note ok" style="margin-top:0">✅ Recibimos tu solicitud. Te avisaremos por WhatsApp y correo en cada paso.</div>
+    <div style="color:var(--muted);font-size:13px">Número de devolución</div>
+    <div class="rma" id="rmaNum"></div>
+    <ul class="timeline" id="tl"></ul>
+    <details><summary>Datos para el equipo de tecnología (payload JSON)</summary>
+      <pre id="json"></pre>
+      <button type="button" class="btn s" id="copy">Copiar JSON</button> <span id="copied" style="color:var(--ok);font-size:13px"></span>
+    </details>
+    <div class="nav"><button type="button" class="btn s" id="restart">Nueva solicitud</button></div>
+  </section>
+  <div class="foot">Prototipo de flujo de devoluciones · Vexbiz Suministros · Los productos y la tienda son datos de muestra</div>
+</div>
+
+<script>
+// ===== Configuración (ajustable por la política) =====
+const PLAZO_ARREP = 7, PLAZO_GARANTIA = 30, REVISION_HORAS = 48;
+
+const PRODUCTOS = [
+  {sku:"PNT-CAU-GAL-BL", nombre:"Pintura caucho satinado blanco · galón", precio:18.5, cant:2, icon:"🎨", retornable:true},
+  {sku:"PNT-ESM-ENT-01", nombre:"Esmalte entonado a la medida (color 'Arena') · galón", precio:24, cant:1, icon:"🖌️", retornable:false, porque:"Preparado a la medida del cliente"},
+  {sku:"ABR-DSC-4.5", nombre:"Disco de corte metal 4½\" · caja x10", precio:12, cant:1, icon:"💿", retornable:true},
+  {sku:"HER-TAL-650", nombre:"Taladro percutor 650 W", precio:45, cant:1, icon:"🔧", retornable:true},
+  {sku:"ELE-CBL-12-M", nombre:"Cable THW #12 · 25 metros cortados", precio:22, cant:1, icon:"🔌", retornable:false, porque:"Material cortado a la medida", soloDefecto:true}
+];
+
+// responsable: quien origina el problema → define quién paga el traslado
+const MOTIVOS = [
+  {g:"Problema con el producto", items:[
+    {id:"defectuoso", t:"Está defectuoso o no funciona", d:"Falla de fábrica o en el primer uso", resp:"tienda", plazo:PLAZO_GARANTIA, cond:"c_defecto", fotos:true},
+    {id:"danado", t:"Llegó dañado, roto o golpeado", d:"Daño durante el traslado", resp:"logistica", plazo:PLAZO_GARANTIA, cond:"c_danado", fotos:true},
+    {id:"incompleto", t:"Faltan piezas, accesorios o unidades", d:"Llegó menos de lo que compré", resp:"tienda", plazo:PLAZO_GARANTIA, cond:"c_incompleto", fotos:true}
+  ]},
+  {g:"No es lo que pedí", items:[
+    {id:"equivocado", t:"Me enviaron otro producto", d:"Otra marca, modelo, medida o color", resp:"tienda", plazo:PLAZO_GARANTIA, cond:"c_equivocado", fotos:true},
+    {id:"descripcion", t:"No coincide con la publicación", d:"Las fotos o la ficha decían otra cosa", resp:"tienda", plazo:PLAZO_GARANTIA, cond:"c_descripcion", fotos:true},
+    {id:"compatibilidad", t:"No sirve para lo que lo necesito", d:"Medida, rosca, voltaje o compatibilidad", resp:"depende", plazo:PLAZO_ARREP, cond:"c_compat"}
+  ]},
+  {g:"Cambié de opinión", items:[
+    {id:"error_compra", t:"Me equivoqué al comprar", d:"Elegí el producto o la cantidad equivocada", resp:"cliente", plazo:PLAZO_ARREP},
+    {id:"arrepentimiento", t:"Ya no lo necesito", d:"Cambié de planes o conseguí otra opción", resp:"cliente", plazo:PLAZO_ARREP},
+    {id:"tarde", t:"Llegó demasiado tarde", d:"La entrega se retrasó y ya no me sirve", resp:"logistica", plazo:PLAZO_ARREP}
+  ]},
+  {g:"Otro", items:[
+    {id:"otro", t:"Otro motivo", d:"Explícalo en el detalle", resp:"por_definir", plazo:PLAZO_GARANTIA}
+  ]}
+];
+const CONDICION = [
+  {id:"sellado", t:"Sin abrir", d:"Sellado como llegó"},
+  {id:"abierto", t:"Abierto, sin usar", d:"Solo lo revisé"},
+  {id:"usado", t:"Usado", d:"Lo usé o instalé"}
+];
+const SOLUCIONES = [
+  {id:"cambio", t:"Cambio por el mismo producto", d:"Te enviamos uno nuevo igual"},
+  {id:"reembolso", t:"Reembolso del dinero", d:"Al mismo medio de pago, en 3 a 5 días hábiles tras la revisión"},
+  {id:"saldo", t:"Saldo a favor en Vexbiz", d:"Disponible apenas la tienda reciba el producto"}
+];
+const ENTREGAS = [
+  {id:"tienda", t:"Lo llevo a la tienda", d:"Te damos dirección y horario al aprobar"},
+  {id:"retiro", t:"Que lo retiren en mi dirección", d:"Coordinado por Vexbiz con un fletero aliado"}
+];
+
+const $ = id => document.getElementById(id);
+const steps = [...document.querySelectorAll(".step")];
+let cur = 0, fotos = [];
+
+function opt(name, o, type="radio", extra=""){
+  return `<label class="opt" data-name="${name}"><input type="${type}" name="${name}" value="${o.id}" ${extra}><div><div class="t">${o.t}</div>${o.d?`<div class="d">${o.d}</div>`:""}</div></label>`;
+}
+function render(){
+  $("motivos").innerHTML = MOTIVOS.map(g=>`<div class="group-title">${g.g}</div>`+g.items.map(m=>opt("motivo",m)).join("")).join("");
+  $("condicion").innerHTML = CONDICION.map(c=>opt("condicion",c)).join("");
+  $("soluciones").innerHTML = SOLUCIONES.map(s=>opt("solucion",s)).join("");
+  $("entregas").innerHTML = ENTREGAS.map(s=>opt("entrega",s)).join("");
+  $("prods").innerHTML = PRODUCTOS.map((p,i)=>`
+    <label class="opt ${!p.retornable&&!p.soloDefecto?'dis':''}" data-name="prod">
+      <input type="checkbox" name="prod" value="${i}" ${!p.retornable&&!p.soloDefecto?'disabled':''}>
+      <div class="prod" style="flex:1"><div class="pimg">${p.icon}</div><div>
+        <div class="t">${p.nombre}${p.retornable?'':(p.soloDefecto?'<span class="tag warn">Solo por defecto</span>':'<span class="tag bad">No retornable</span>')}</div>
+        <div class="d">SKU ${p.sku} · $${p.precio.toFixed(2)} c/u · compraste ${p.cant}${p.porque?` · ${p.porque}`:''}</div></div></div>
+      <select class="qty" data-i="${i}" ${p.cant===1?'disabled':''}>${Array.from({length:p.cant},(_,k)=>`<option ${k+1===p.cant?'selected':''}>${k+1}</option>`).join("")}</select>
+    </label>`).join("");
+  $("bar").innerHTML = steps.map(()=>"<div></div>").join("");
+}
+render();
+
+document.addEventListener("change", e=>{
+  const n = e.target.name;
+  if(n){ document.querySelectorAll(`.opt[data-name="${n}"]`).forEach(l=>l.classList.toggle("sel", l.querySelector("input").checked)); }
+  if(n==="motivo"){
+    document.querySelectorAll("#motivos ~ .cond").forEach(c=>c.classList.remove("show"));
+    const m = motivo(); if(m&&m.cond) $(m.cond).classList.add("show");
+  }
+  if(n==="condicion"||n==="motivo") $("usadoNote").style.display = (val("condicion")==="usado" && motivo() && ["cliente"].includes(motivo().resp)) ? "block":"none";
+  if(n==="solucion") $("c_reembolso").classList.toggle("show", val("solucion")==="reembolso");
+  if(n==="entrega"||n==="motivo") costo();
+});
+
+const val = n => (document.querySelector(`input[name="${n}"]:checked`)||{}).value;
+const motivo = () => MOTIVOS.flatMap(g=>g.items).find(m=>m.id===val("motivo"));
+function respFinal(){
+  const m = motivo(); if(!m) return null;
+  if(m.resp==="depende") return $("fichaClara").value==="no" ? "tienda" : "cliente";
+  return m.resp;
+}
+function costo(){
+  const r = respFinal(), n = $("costoNote");
+  if(!r){ n.className="note"; n.textContent=""; return; }
+  if(r==="cliente"){ n.className="note warn"; n.innerHTML = val("entrega")==="retiro" ? "Como la devolución es por decisión tuya, <b>el costo del retiro corre por tu cuenta</b> (se descuenta del reembolso o se paga aparte)." : "Como la devolución es por decisión tuya, el traslado hasta la tienda corre por tu cuenta."; }
+  else { n.className="note ok"; n.innerHTML = "Como el problema no es tuyo, <b>el traslado no tiene costo para ti</b>. Lo cubre " + (r==="logistica"?"Vexbiz / el servicio de envío.":r==="tienda"?"la tienda.":"la tienda o Vexbiz, según la revisión."); }
+}
+$("fichaClara").addEventListener("change", costo);
+
+function diasDesde(d){ return Math.floor((Date.now()-new Date(d+"T12:00:00"))/864e5); }
+function selProds(){ return [...document.querySelectorAll('input[name="prod"]:checked')].map(c=>{const i=+c.value;const q=document.querySelector(`.qty[data-i="${i}"]`);return {...PRODUCTOS[i], cantDev:+q.value};}); }
+
+function fail(n,msg){ const e=$("e"+n); e.textContent=msg; e.classList.add("show"); return false; }
+function validar(i){
+  document.querySelectorAll(".err").forEach(e=>e.classList.remove("show"));
+  if(i===0){
+    if(!/^\S{4,}$/.test($("orden").value.trim())) return fail(1,"Indica el número de pedido.");
+    if(!$("fentrega").value) return fail(1,"Indica la fecha en que recibiste el pedido.");
+    const d = diasDesde($("fentrega").value);
+    if(d<0) return fail(1,"La fecha de entrega no puede ser futura.");
+    if(d>PLAZO_GARANTIA) return fail(1,`Han pasado ${d} días desde la entrega. El plazo máximo es de ${PLAZO_GARANTIA} días; si es un tema de garantía del fabricante, escríbenos por WhatsApp.`);
+    if($("nombre").value.trim().length<3) return fail(1,"Escribe tu nombre.");
+    if(!/^0?4(12|14|16|24|26|22)-?\d{7}$/.test($("tel").value.replace(/\s/g,""))) return fail(1,"Escribe un teléfono válido, ej. 0414-1234567.");
+    if(!/^\S+@\S+\.\S+$/.test($("email").value)) return fail(1,"Escribe un correo válido.");
+    $("ordenLbl").textContent = $("orden").value.trim().toUpperCase();
+  }
+  if(i===1 && !selProds().length) return fail(2,"Selecciona al menos un producto.");
+  if(i===2){
+    const m = motivo(); if(!m) return fail(3,"Elige un motivo.");
+    const d = diasDesde($("fentrega").value);
+    if(d>m.plazo) return fail(3,`Para este motivo el plazo es de ${m.plazo} días y ya pasaron ${d}. Si el producto tiene una falla, elige “Está defectuoso”.`);
+    if(selProds().some(p=>p.soloDefecto) && !["defectuoso","danado","equivocado","incompleto"].includes(m.id)) return fail(3,"El material cortado a la medida solo se acepta si llegó defectuoso, dañado, incompleto o equivocado.");
+    const req = {defectuoso:["falla","usos"], danado:["empaqueLlegada"], equivocado:["recibido"], incompleto:["falta"], descripcion:["difiere"], compatibilidad:["fichaClara"]}[m.id]||[];
+    if(req.some(id=>!$(id).value.trim())) return fail(3,"Completa las preguntas de este motivo.");
+    if($("detalle").value.trim().length<20) return fail(3,"Cuéntanos un poco más (mínimo 20 caracteres).");
+    const f = m.fotos; $("fotoHint").innerHTML = f ? "<b>Obligatorio para este motivo:</b> sube al menos 2 fotos (producto completo y detalle del problema; si llegó dañado, también el empaque)." : "Opcional, pero ayuda a resolver más rápido.";
+  }
+  if(i===3 && !val("condicion")) return fail(4,"Indica la condición del producto.");
+  if(i===4 && motivo().fotos && fotos.length<2) return fail(5,"Sube al menos 2 fotos para este motivo.");
+  if(i===5){
+    if(!val("solucion")) return fail(6,"Elige cómo quieres resolverlo.");
+    if(val("solucion")==="reembolso" && (!$("banco").value || !/^[VEJ]-?\d{6,9}$/i.test($("ci").value.trim()))) return fail(6,"Indica el banco y una cédula válida (ej. V-12345678).");
+    if(!val("entrega")) return fail(6,"Elige cómo nos entregas el producto.");
+    resumen();
+  }
+  if(i===6 && !$("acepto").checked) return fail(7,"Debes aceptar la política para enviar.");
+  return true;
+}
+
+function resumen(){
+  const p = selProds(), m = motivo(), tot = p.reduce((s,x)=>s+x.precio*x.cantDev,0);
+  const lbl = (arr,id)=>(arr.find(x=>x.id===id)||{}).t;
+  const rows = [
+    ["Pedido", $("orden").value.trim().toUpperCase()],
+    ["Productos", p.map(x=>`${x.cantDev} × ${x.nombre}`).join("<br>")],
+    ["Monto", "$"+tot.toFixed(2)],
+    ["Motivo", m.t],
+    ["Condición", lbl(CONDICION,val("condicion"))],
+    ["Fotos", fotos.length+" archivo(s)"],
+    ["Solución", lbl(SOLUCIONES,val("solucion"))],
+    ["Entrega", lbl(ENTREGAS,val("entrega"))],
+    ["Traslado", respFinal()==="cliente"?"A cargo del cliente":"Sin costo para ti"]
+  ];
+  $("resumen").innerHTML = rows.map(r=>`<dt>${r[0]}</dt><dd>${r[1]}</dd>`).join("");
+}
+
+function show(){
+  steps.forEach((s,i)=>s.style.display=i===cur?"block":"none");
+  [...$("bar").children].forEach((b,i)=>b.classList.toggle("on",i<=cur));
+  $("slabel").textContent = `Paso ${cur+1} de ${steps.length} · ${steps[cur].dataset.title}`;
+  $("back").style.visibility = cur? "visible":"hidden";
+  $("next").textContent = cur===steps.length-1 ? "Enviar solicitud" : "Continuar →";
+  $("next").className = "btn " + (cur===steps.length-1?"a":"p");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+$("next").onclick = ()=>{ if(!validar(cur)) return; if(cur<steps.length-1){cur++;show();} else enviar(); };
+$("back").onclick = ()=>{ if(cur>0){cur--;show();} };
+
+// Fotos
+$("drop").onclick = ()=>$("fotos").click();
+$("drop").ondragover = e=>{e.preventDefault();};
+$("drop").ondrop = e=>{e.preventDefault(); addFotos(e.dataTransfer.files);};
+$("fotos").onchange = e=>addFotos(e.target.files);
+function addFotos(list){
+  [...list].filter(f=>f.type.startsWith("image/")).slice(0,6-fotos.length).forEach(f=>{
+    const r=new FileReader(); r.onload=()=>{fotos.push({nombre:f.name,tamano:f.size,src:r.result}); thumbs();}; r.readAsDataURL(f);
+  });
+}
+function thumbs(){ $("thumbs").innerHTML = fotos.map((f,i)=>`<div><img src="${f.src}" alt=""><button type="button" data-i="${i}">✕</button></div>`).join(""); }
+$("thumbs").onclick = e=>{ if(e.target.dataset.i!==undefined){fotos.splice(+e.target.dataset.i,1);thumbs();} };
+
+function enviar(){
+  const rma = "DEV-" + new Date().getFullYear() + "-" + String(Math.floor(Math.random()*90000)+10000);
+  const m = motivo(), p = selProds();
+  const payload = {
+    rma, estado:"SOLICITADA", creada:new Date().toISOString(),
+    pedido:$("orden").value.trim().toUpperCase(), fecha_entrega:$("fentrega").value, dias_desde_entrega:diasDesde($("fentrega").value),
+    cliente:{nombre:$("nombre").value.trim(), telefono:$("tel").value.trim(), email:$("email").value.trim()},
+    items:p.map(x=>({sku:x.sku, nombre:x.nombre, cantidad:x.cantDev, precio_unit:x.precio})),
+    monto_total:+p.reduce((s,x)=>s+x.precio*x.cantDev,0).toFixed(2),
+    motivo:{codigo:m.id, categoria:MOTIVOS.find(g=>g.items.includes(m)).g, responsable:respFinal(), detalle:$("detalle").value.trim(),
+      extra:Object.fromEntries(["falla","usos","empaqueLlegada","recibido","falta","difiere","fichaClara"].map(k=>[k,$(k).value]).filter(x=>x[1]))},
+    condicion:{estado:val("condicion"), empaque_original:$("empOrig").checked, accesorios_completos:$("accComp").checked, tiene_factura:$("factura").checked},
+    evidencias:fotos.map(f=>({archivo:f.nombre, bytes:f.tamano})),
+    solucion:val("solucion"), entrega:val("entrega"), traslado_a_cargo_de:respFinal()==="cliente"?"cliente":(respFinal()==="logistica"?"vexbiz":"tienda"),
+    reembolso: val("solucion")==="reembolso" ? {metodo:"pago_movil_spidi", banco:$("banco").value, cedula:$("ci").value.trim().toUpperCase()} : null,
+    sla:{respuesta_tienda_horas:REVISION_HORAS, escalar_a_vexbiz_si_vence:true}
+  };
+  $("f").style.display="none"; $("bar").style.display="none"; $("slabel").style.display="none";
+  $("done").style.display="block"; $("rmaNum").textContent = rma;
+  const T = [
+    ["Solicitud recibida","Ahora mismo",1],
+    ["Revisión de la tienda",`Responde en máximo ${REVISION_HORAS} h hábiles; si no, Vexbiz decide`,0],
+    ["Aprobada · instrucciones de entrega","Te enviamos dirección o coordinamos el retiro",0],
+    ["Producto recibido e inspeccionado","La tienda confirma el estado",0],
+    [val("solucion")==="reembolso"?"Reembolso enviado":val("solucion")==="cambio"?"Cambio despachado":"Saldo acreditado","Cierre de la devolución",0]
+  ];
+  $("tl").innerHTML = T.map(t=>`<li class="${t[2]?'on':''}"><b>${t[0]}</b><small>${t[1]}</small></li>`).join("");
+  $("json").textContent = JSON.stringify(payload,null,2);
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+$("copy").onclick = async()=>{ try{ await navigator.clipboard.writeText($("json").textContent); $("copied").textContent="Copiado ✓"; }catch(e){ $("copied").textContent="Selecciona el texto y cópialo manualmente"; } };
+$("restart").onclick = ()=>location.reload();
+
+// fecha por defecto: hace 3 días
+const d3 = new Date(Date.now()-3*864e5); $("fentrega").value = d3.toISOString().slice(0,10);
+show();
+</script>
+</body>
+</html>
